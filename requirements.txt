@@ -1,0 +1,17 @@
+torch>=2.0.0
+torchvision>=0.15.0
+numpy
+matplotlib
+jupyter
+transformers>=4.30.0
+accelerate
+bitsandbytes
+optimum[onnxruntime]
+auto-gptq
+autoawq
+lm-eval
+pyyaml
+tqdm
+scikit-learn
+pandas
+datasets
