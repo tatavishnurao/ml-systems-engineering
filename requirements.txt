@@ -7,7 +7,7 @@ transformers>=4.30.0
 accelerate
 bitsandbytes
 optimum[onnxruntime]
-# auto-gptq  # Note: Build from source required - pip install auto-gptq --no-build-isolation (requires CUDA toolkit)
+# auto-gptq  # Note: Incompatible with PyTorch 2.11 + CUDA 13. Use autoawq instead (already installed below)
 autoawq
 lm-eval
 pyyaml
