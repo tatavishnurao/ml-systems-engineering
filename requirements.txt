@@ -7,7 +7,7 @@ transformers>=4.30.0
 accelerate
 bitsandbytes
 optimum[onnxruntime]
-auto-gptq
+# auto-gptq  # Note: Build from source required - pip install auto-gptq --no-build-isolation (requires CUDA toolkit)
 autoawq
 lm-eval
 pyyaml
