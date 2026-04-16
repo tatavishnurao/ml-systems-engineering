@@ -3,7 +3,6 @@ import numpy as np
 
 try:
     import openai
-
     OPENAI_AVAILABLE = True
 except ImportError:
     OPENAI_AVAILABLE = False
