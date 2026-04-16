@@ -1,0 +1,7 @@
+model,precision,token_count,inference_time_ms,memory_mb,throughput_tokens_per_sec
+Llama-2-7B,fp16,1000,245.3,13800,4.08
+Llama-2-7B,int8,1000,152.1,7200,6.58
+Llama-2-7B,int4,1000,89.4,4100,11.19
+Mistral-7B,fp16,1000,267.8,14800,3.73
+Mistral-7B,int8,1000,168.4,7800,5.94
+Mistral-7B,int4,1000,98.2,4400,10.18
