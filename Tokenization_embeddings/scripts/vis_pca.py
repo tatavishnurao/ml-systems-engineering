@@ -119,7 +119,7 @@ Examples:
     print(f"\nGenerating {args.dim}D PCA plot...")
 
     visualizer = PCAVisualizer(n_components=args.dim)
-    fig = visualizer.plot(
+    visualizer.plot(
         embeddings,
         labels=labels,
         colors=colors,
@@ -131,7 +131,7 @@ Examples:
     )
 
     print(f"\n{'=' * 50}")
-    print(f"Explained variance ratio:")
+    print("Explained variance ratio:")
     for i, ratio in enumerate(visualizer.explained_variance_ratio):
         print(f"  PC{i + 1}: {ratio:.2%}")
     print(f"Total variance explained: {sum(visualizer.explained_variance_ratio):.2%}")

@@ -1,5 +1,4 @@
-from typing import List, Union, Optional
-import numpy as np
+from typing import List, Optional
 
 try:
     import tiktoken

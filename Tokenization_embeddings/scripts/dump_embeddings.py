@@ -74,7 +74,7 @@ Examples:
         print(f"Error initializing embedding provider: {e}", file=sys.stderr)
         sys.exit(1)
 
-    print(f"Generating embeddings...")
+    print("Generating embeddings...")
     try:
         embeddings = provider.embed(
             texts, batch_size=args.batch_size, show_progress=True
