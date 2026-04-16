@@ -3,19 +3,16 @@ import numpy as np
 
 try:
     import tiktoken
-
     TIKTOKEN_AVAILABLE = True
 except ImportError:
     TIKTOKEN_AVAILABLE = False
 
 try:
     from transformers import AutoTokenizer
-
     HF_AVAILABLE = True
 except ImportError:
     HF_AVAILABLE = False
-
-
+    
 class TokenizerWrapper:
     def __init__(self, model_name: str = "gpt-4", backend: Optional[str] = None):
         self.model_name = model_name

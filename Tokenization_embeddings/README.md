@@ -1,193 +1,241 @@
-# Tokenization & Embeddings Module
+# Tokenization & Embeddings
 
-[![Python 3.8+](https://img.shields.io/badge/python-3.8+-blue.svg)](https://www.python.org/downloads/)
-[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+A Python library for text tokenization and embeddings with visualization.
 
-A reusable Python library for text tokenization, embeddings, and visualization.
+## What is This?
 
-## Features
+This library provides two main capabilities:
 
-- **Unified Tokenizers** - Wrap OpenAI (tiktoken) and HuggingFace tokenizers with one API
-- **Multiple Embedding Providers** - OpenAI API or local sentence-transformers models
-- **PCA Visualization** - 2D and 3D plots with matplotlib
-- **CLI Tools** - Quick command-line scripts for common tasks
-- **Tested** - Comprehensive unit tests with pytest
+**Tokenization** - Convert text into tokens (numbers) that LLMs can process
+**Embeddings** - Convert text into vectors that capture meaning
 
-## Quick Start
-
-### Installation
-
-```bash
-# Clone the repository
-git clone <repo-url>
-cd Tokenization_embeddings
-
-# Install dependencies
-pip install -r requirements.txt
-
-# Or install in development mode
-pip install -e .
-```
-
-### Basic Usage
-
-```python
-from token_emb import TokenizerWrapper, EmbeddingProvider, plot_2d
-
-# 1. Tokenize
-tokenizer = TokenizerWrapper("gpt-4")
-count = tokenizer.count("Hello, world!")  # Returns: 4
-
-# 2. Embed
-provider = EmbeddingProvider("sentence-transformers/all-MiniLM-L6-v2")
-embeddings = provider.embed(["Hello world", "Goodbye world"])
-
-# 3. Visualize
-plot_2d(embeddings, labels=["Hello", "Goodbye"], save_path="plot.png")
-```
-
-## CLI Usage
-
-```bash
-# Count tokens in a file
-python scripts/count_tokens.py essay.txt --model gpt-4
-
-# Generate embeddings from a file (one text per line)
-python scripts/dump_embeddings.py sentences.txt --output embeddings.npy
-
-# Create PCA visualization
-python scripts/vis_pca.py embeddings.npy --labels labels.txt --output plot.png
-```
-
-## Project Structure
-
-```
-Tokenization_embeddings/
-│
-├── src/token_emb/               # Reusable library
-│   ├── __init__.py
-│   ├── tokenizer_utils.py       # Tokenization (tiktoken/HF)
-│   ├── embedding_utils.py       # Embeddings (OpenAI/local)
-│   └── pca_visualizer.py        # PCA visualization
-│
-├── scripts/                     # CLI entry points
-│   ├── count_tokens.py          # Count tokens in files
-│   ├── dump_embeddings.py       # Save embeddings to .npy
-│   └── vis_pca.py               # Quick PCA plots
-│
-├── tests/                       # Unit tests
-│   ├── test_tokenizer_utils.py
-│   └── test_embedding_utils.py
-│
-├── examples/                    # Demos
-│   └── notebook.ipynb           # Jupyter notebook
-│
-├── configs/
-│   └── model_paths.yaml         # Model configurations
-│
-└── docs/
-    └── token_emb.md             # Full documentation
-```
-
-## Dependencies
-
-Core:
-- numpy
-- pyyaml
-
-Optional (install as needed):
-```bash
-# For OpenAI tokenizers & embeddings
-pip install tiktoken openai
-
-# For HuggingFace models
-pip install transformers sentence-transformers
-
-# For visualization
-pip install matplotlib scikit-learn
-
-# For testing
-pip install pytest
-```
-
-## Examples
+## Quick Examples
 
 ### Tokenization
 
 ```python
 from token_emb import TokenizerWrapper
 
-# Works with OpenAI models
 tokenizer = TokenizerWrapper("gpt-4")
-tokens = tokenizer.encode("Hello, world!")
-count = tokenizer.count(text)
+tokens = tokenizer.encode("Hello world")
+print(tokenizer.count("Hello world"))  # 2 tokens
 
-# Or HuggingFace models
 tokenizer = TokenizerWrapper("bert-base-uncased")
 ```
+
+**Use cases:**
+- Estimate API costs before sending a request
+- Debug why model outputs seem cut off
+- Optimize prompts to fit within token limits
 
 ### Embeddings
 
 ```python
 from token_emb import EmbeddingProvider, cosine_similarity
 
-# Local model (fast, free)
 provider = EmbeddingProvider("all-MiniLM-L6-v2")
+emb = provider.embed("Machine learning is amazing")
 
-# Or OpenAI API
-provider = EmbeddingProvider("text-embedding-ada-002", api_key="sk-...")
-
-# Get embeddings
-emb1 = provider.embed("Machine learning is amazing")
-emb2 = provider.embed("Deep learning is powerful")
-
-# Compare similarity
-sim = cosine_similarity(emb1, emb2)
-print(f"Similarity: {sim:.3f}")
+emb1 = provider.embed("The cat is sleeping")
+emb2 = provider.embed("A dog is resting")
+print(cosine_similarity(emb1, emb2))  # High similarity!
 ```
+
+**Use cases:**
+- Semantic search - find documents by meaning
+- Clustering - group similar content automatically
+- Classification - categorize text by similarity
+- Recommendations - suggest related content
 
 ### Visualization
 
 ```python
-from token_emb import PCAVisualizer
+from token_emb import plot_2d, PCAVisualizer
 
-# 2D plot
-visualizer = PCAVisualizer(n_components=2)
-fig = visualizer.plot(embeddings, labels=texts, save_path="plot.png")
+plot_2d(embeddings, labels=text_labels, save_path="clusters.png")
 
-# 3D plot
-plot_3d(embeddings, colors=labels, title="My 3D Plot")
+viz = PCAVisualizer(n_components=2)
+viz.plot(embeddings, colors=category_labels, title="Document Clusters")
+```
+
+## CLI Usage
+
+### Count Tokens in a File
+
+```bash
+python scripts/count_tokens.py essay.txt --model gpt-4
+```
+
+Output:
+```
+==================================================
+File: essay.txt
+Model: gpt-4
+Backend: tiktoken
+==================================================
+Token count: 1,247
+Character count: 6,582
+Avg chars per token: 5.28
+==================================================
+```
+
+### Generate Embeddings
+
+```bash
+python scripts/dump_embeddings.py sentences.txt --output embeddings.npy
+```
+
+This saves embeddings to `embeddings.npy` and texts to `sentences.txt`.
+
+### Visualize with PCA
+
+```bash
+python scripts/vis_pca.py embeddings.npy --labels sentences.txt --output plot.png
+```
+
+## Project Structure
+
+```
+Tokenization_embeddings/
+├── src/token_emb/           # Library code
+│   ├── tokenizer_utils.py   # Tokenization
+│   ├── embedding_utils.py   # Embeddings
+│   └── pca_visualizer.py   # Visualization
+├── scripts/                 # CLI tools
+│   ├── count_tokens.py      # Count tokens in files
+│   ├── dump_embeddings.py   # Generate embeddings
+│   └── vis_pca.py          # Visualize embeddings
+├── examples/               # Jupyter demo
+├── outputs/                # Example outputs
+└── tests/                  # Unit tests
+```
+
+## Installation
+
+```bash
+pip install -r requirements.txt
+```
+
+Dependencies:
+- numpy, pyyaml (core)
+- tiktoken (for OpenAI tokenizers)
+- transformers (for HuggingFace models)
+- sentence-transformers (for local embeddings)
+- matplotlib, scikit-learn (for visualization)
+
+## Tokenization Use Cases
+
+### 1. Cost Estimation
+
+```python
+from token_emb import count_tokens
+
+PRICING = {"gpt-4": 0.03, "gpt-3.5-turbo": 0.0015}
+
+text = open("prompt.txt").read()
+tokens = count_tokens(text, "gpt-4")
+cost = (tokens / 1000) * PRICING["gpt-4"]
+print(f"Estimated cost: ${cost:.4f}")
+```
+
+### 2. Debug Token Limits
+
+```python
+tokenizer = TokenizerWrapper("gpt-4")
+long_text = load_document()
+
+if tokenizer.count(long_text) > 8000:
+    print("Warning: Document may exceed context limit!")
+```
+
+### 3. Optimize Prompts
+
+```python
+verbose = "Please provide a comprehensive and detailed explanation of..."
+tokens_verbose = count_tokens(verbose, "gpt-4")
+
+concise = "Explain thoroughly..."
+tokens_concise = count_tokens(concise, "gpt-4")
+
+print(f"Saving {tokens_verbose - tokens_concise} tokens per prompt!")
+```
+
+## Embedding Use Cases
+
+### 1. Semantic Search
+
+```python
+from token_emb import EmbeddingProvider, cosine_similarity
+import numpy as np
+
+provider = EmbeddingProvider("all-MiniLM-L6-v2")
+
+documents = [
+    "Python is a programming language",
+    "JavaScript is used for web development",
+    "Machine learning uses algorithms to learn from data",
+    "The weather is nice today",
+]
+
+query = "Tell me about coding"
+doc_embeddings = provider.embed(documents)
+query_embedding = provider.embed(query)
+
+similarities = [cosine_similarity(query_embedding, doc_emb) for doc_emb in doc_embeddings]
+best_match = np.argmax(similarities)
+print(f"Most relevant: {documents[best_match]}")
+```
+
+### 2. Document Clustering
+
+```python
+from token_emb import EmbeddingProvider
+from sklearn.cluster import KMeans
+
+provider = EmbeddingProvider("all-MiniLM-L6-v2")
+embeddings = provider.embed(document_list)
+
+clusters = KMeans(n_clusters=5).fit_predict(embeddings)
+
+for i in range(5):
+    cluster_docs = [doc for doc, c in zip(documents, clusters) if c == i]
+    print(f"Cluster {i}: {len(cluster_docs)} documents")
+```
+
+### 3. Text Classification
+
+```python
+from token_emb import get_embeddings
+from sklearn.linear_model import LogisticRegression
+
+X_train = get_embeddings(train_texts)
+X_test = get_embeddings(test_texts)
+
+clf = LogisticRegression()
+clf.fit(X_train, y_train)
+predictions = clf.predict(X_test)
+```
+
+### 4. Duplicate Detection
+
+```python
+from token_emb import cosine_similarity_matrix
+
+embeddings = provider.embed(candidate_texts)
+similarity_matrix = cosine_similarity_matrix(embeddings)
+
+for i in range(len(texts)):
+    for j in range(i+1, len(texts)):
+        if similarity_matrix[i, j] > 0.95:
+            print(f"Potential duplicate: {texts[i]} <-> {texts[j]}")
 ```
 
 ## Testing
 
 ```bash
-# Run all tests
-pytest tests/
-
-# With coverage
-pytest tests/ --cov=src/token_emb --cov-report=html
-
-# Specific test
-pytest tests/test_tokenizer_utils.py -v
+pytest tests/ -v
 ```
-
-## Configuration
-
-See `configs/model_paths.yaml` for model configurations.
-
-You can override cache directory:
-```python
-provider = EmbeddingProvider(
-    "sentence-transformers/all-MiniLM-L6-v2",
-    cache_dir="/path/to/cache"
-)
-```
-
-## Documentation
-
-Full documentation in `docs/token_emb.md`.
 
 ## License
 
-MIT License - see LICENSE file for details.
+MIT
