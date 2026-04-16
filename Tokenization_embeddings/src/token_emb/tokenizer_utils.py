@@ -2,16 +2,19 @@ from typing import List, Optional
 
 try:
     import tiktoken
+
     TIKTOKEN_AVAILABLE = True
 except ImportError:
     TIKTOKEN_AVAILABLE = False
 
 try:
     from transformers import AutoTokenizer
+
     HF_AVAILABLE = True
 except ImportError:
     HF_AVAILABLE = False
-    
+
+
 class TokenizerWrapper:
     def __init__(self, model_name: str = "gpt-4", backend: Optional[str] = None):
         self.model_name = model_name
@@ -50,7 +53,7 @@ class TokenizerWrapper:
 
     def encode(self, text: str) -> List[int]:
         if self.backend == "tiktoken":
-            return self._tokenizer.encode(text)
+            return self._tokenizer.encode(text, disallowed_special=())
         return self._tokenizer.encode(text, add_special_tokens=False)
 
     def decode(self, tokens: List[int]) -> str:

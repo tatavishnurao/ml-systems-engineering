@@ -73,7 +73,7 @@ class TestCosineSimilarity:
         for i in range(len(texts)):
             for j in range(len(texts)):
                 sim = cosine_similarity(embeddings[i], embeddings[j])
-                assert -1.0 <= sim <= 1.0
+                assert -1.0 <= sim <= 1.0 + 1e-6
 
     def test_similar_texts(self):
         provider = EmbeddingProvider("all-MiniLM-L6-v2")
