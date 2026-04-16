@@ -7,7 +7,7 @@ transformers>=4.30.0
 accelerate
 bitsandbytes
 optimum[onnxruntime]
-# auto-gptq  # Note: Incompatible with PyTorch 2.11 + CUDA 13. Use autoawq instead (already installed below)
+# auto-gptq  # Incompatible with PyTorch 2.11 + CUDA 13. Use autoawq instead
 autoawq
 lm-eval
 pyyaml
@@ -15,3 +15,6 @@ tqdm
 scikit-learn
 pandas
 datasets
+tiktoken
+sentence-transformers
+pytest
