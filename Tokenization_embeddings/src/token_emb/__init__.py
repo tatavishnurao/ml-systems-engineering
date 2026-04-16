@@ -1,9 +1,3 @@
-"""
-Tokenization and Embeddings module.
-
-A reusable library for tokenization, embeddings, and visualization.
-"""
-
 from .tokenizer_utils import (
     TokenizerWrapper,
     count_tokens,

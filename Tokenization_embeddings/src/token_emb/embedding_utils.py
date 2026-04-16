@@ -1,10 +1,5 @@
-"""
-Embedding utilities - calls OpenAI API or uses sentence-transformers.
-"""
-
 from typing import List, Union, Optional
 import numpy as np
-import warnings
 
 try:
     import openai
@@ -22,8 +17,6 @@ except ImportError:
 
 
 class EmbeddingProvider:
-    """Unified provider for text embeddings."""
-
     def __init__(
         self,
         model_name: str = "text-embedding-ada-002",
@@ -31,15 +24,6 @@ class EmbeddingProvider:
         api_key: Optional[str] = None,
         cache_dir: Optional[str] = None,
     ):
-        """
-        Initialize embedding provider.
-
-        Args:
-            model_name: Model identifier
-            backend: 'openai', 'sentence-transformers', or None (auto-detect)
-            api_key: OpenAI API key (for openai backend)
-            cache_dir: Cache directory for local models
-        """
         self.model_name = model_name
         self.backend = backend or self._detect_backend(model_name)
         self.api_key = api_key
@@ -48,13 +32,11 @@ class EmbeddingProvider:
         self._initialize()
 
     def _detect_backend(self, model_name: str) -> str:
-        """Auto-detect appropriate backend."""
         if model_name.startswith(("text-embedding",)):
             return "openai"
         return "sentence-transformers"
 
     def _initialize(self):
-        """Initialize the embedding model."""
         if self.backend == "openai":
             if not OPENAI_AVAILABLE:
                 raise ImportError("openai not installed. Run: pip install openai")
@@ -75,17 +57,6 @@ class EmbeddingProvider:
         batch_size: int = 32,
         show_progress: bool = False,
     ) -> np.ndarray:
-        """
-        Get embeddings for text(s).
-
-        Args:
-            texts: Single text or list of texts
-            batch_size: Batch size for encoding
-            show_progress: Show progress bar
-
-        Returns:
-            Embedding vectors (shape: [N, D] or [D] for single text)
-        """
         single = isinstance(texts, str)
         texts = [texts] if single else texts
 
@@ -97,8 +68,6 @@ class EmbeddingProvider:
         return embeddings[0] if single else embeddings
 
     def _embed_openai(self, texts: List[str]) -> np.ndarray:
-        """Get embeddings via OpenAI API."""
-        # Note: This is for openai >= 1.0
         try:
             from openai import OpenAI
 
@@ -107,18 +76,13 @@ class EmbeddingProvider:
             embeddings = [item.embedding for item in response.data]
             return np.array(embeddings)
         except ImportError:
-            # Fallback for older openai
             response = openai.Embedding.create(model=self.model_name, input=texts)
             embeddings = [item["embedding"] for item in response["data"]]
             return np.array(embeddings)
 
     def _embed_local(
-        self,
-        texts: List[str],
-        batch_size: int,
-        show_progress: bool,
+        self, texts: List[str], batch_size: int, show_progress: bool
     ) -> np.ndarray:
-        """Get embeddings using sentence-transformers."""
         return self._model.encode(
             texts,
             batch_size=batch_size,
@@ -128,7 +92,6 @@ class EmbeddingProvider:
 
     @property
     def dimension(self) -> int:
-        """Get embedding dimension."""
         if self.backend == "openai":
             dims = {
                 "text-embedding-ada-002": 1536,
@@ -142,49 +105,17 @@ class EmbeddingProvider:
 def get_embeddings(
     texts: Union[str, List[str]], model_name: str = "all-MiniLM-L6-v2", **kwargs
 ) -> np.ndarray:
-    """
-    Quick function to get embeddings.
-
-    Args:
-        texts: Single text or list of texts
-        model_name: Model identifier
-        **kwargs: Additional arguments for EmbeddingProvider
-
-    Returns:
-        Embedding vectors
-    """
     provider = EmbeddingProvider(model_name=model_name, **kwargs)
     return provider.embed(texts)
 
 
 def cosine_similarity(a: np.ndarray, b: np.ndarray) -> float:
-    """
-    Compute cosine similarity between two vectors.
-
-    Args:
-        a: First vector
-        b: Second vector
-
-    Returns:
-        Cosine similarity (range: -1 to 1)
-    """
     a_norm = a / np.linalg.norm(a)
     b_norm = b / np.linalg.norm(b)
     return float(np.dot(a_norm, b_norm))
 
 
 def cosine_similarity_matrix(embeddings: np.ndarray) -> np.ndarray:
-    """
-    Compute pairwise cosine similarity matrix.
-
-    Args:
-        embeddings: Array of shape (N, D)
-
-    Returns:
-        Similarity matrix of shape (N, N)
-    """
-    # Normalize embeddings
     norms = np.linalg.norm(embeddings, axis=1, keepdims=True)
     normalized = embeddings / norms
-    # Compute similarity
     return np.dot(normalized, normalized.T)
