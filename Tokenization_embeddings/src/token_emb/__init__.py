@@ -17,6 +17,13 @@ from .pca_visualizer import (
     plot_3d,
 )
 
+from .attention_numpy import (
+    scaled_dot_product_attention,
+    multi_head_attention,
+    causal_mask,
+    softmax,
+)
+
 __version__ = "0.1.0"
 __all__ = [
     "TokenizerWrapper",
@@ -29,4 +36,8 @@ __all__ = [
     "PCAVisualizer",
     "plot_2d",
     "plot_3d",
+    "scaled_dot_product_attention",
+    "multi_head_attention",
+    "causal_mask",
+    "softmax",
 ]

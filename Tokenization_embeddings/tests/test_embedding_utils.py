@@ -112,3 +112,26 @@ class TestGetEmbeddings:
         embeddings = get_embeddings(texts, model_name="all-MiniLM-L6-v2")
         assert isinstance(embeddings, np.ndarray)
         assert embeddings.shape[0] == len(texts)
+
+    def test_cat_dog_more_similar_than_cat_car(self):
+        provider = EmbeddingProvider("all-MiniLM-L6-v2")
+        embeddings = provider.embed(["cat", "dog", "car"])
+        sim_cat_dog = cosine_similarity(embeddings[0], embeddings[1])
+        sim_cat_car = cosine_similarity(embeddings[0], embeddings[2])
+        assert sim_cat_dog > sim_cat_car
+
+    def test_identical_sentences_high_similarity(self):
+        provider = EmbeddingProvider("all-MiniLM-L6-v2")
+        embeddings = provider.embed(
+            ["The weather is nice today", "Today the weather is nice"]
+        )
+        sim = cosine_similarity(embeddings[0], embeddings[1])
+        assert sim > 0.7
+
+    def test_unrelated_sentences_low_similarity(self):
+        provider = EmbeddingProvider("all-MiniLM-L6-v2")
+        embeddings = provider.embed(
+            ["Machine learning algorithms", "The recipe needs flour"]
+        )
+        sim = cosine_similarity(embeddings[0], embeddings[1])
+        assert sim < 0.5
