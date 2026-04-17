@@ -1,12 +1,10 @@
 import numpy as np
 from typing import Optional, Tuple
 
-
 def softmax(x: np.ndarray, axis: int = -1) -> np.ndarray:
     x_max = np.max(x, axis=axis, keepdims=True)
     exp_x = np.exp(x - x_max)
     return exp_x / np.sum(exp_x, axis=axis, keepdims=True)
-
 
 def scaled_dot_product_attention(
     query: np.ndarray,

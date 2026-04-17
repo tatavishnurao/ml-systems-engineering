@@ -301,6 +301,64 @@ os.environ["CUDA_VISIBLE_DEVICES"] = ""
 
 ---
 
+## Scaled Dot-Product Attention (NumPy)
+
+The `attention_numpy.py` module implements attention mechanisms from scratch using only NumPy, making the math transparent and easy to follow.
+
+### Quick Example
+
+```python
+import numpy as np
+from token_emb.attention_numpy import scaled_dot_product_attention, causal_mask
+
+# Create Q, K, V (batch=1, heads=2, seq_len=4, d_k=8)
+Q = np.random.randn(1, 2, 4, 8)
+K = np.random.randn(1, 2, 4, 8)
+V = np.random.randn(1, 2, 4, 8)
+
+# Standard attention
+output, weights = scaled_dot_product_attention(Q, K, V)
+print(output.shape)   # (1, 2, 4, 8) - same as Q
+print(weights.shape)  # (1, 2, 4, 4) - attention weights
+
+# Causal (autoregressive) attention
+mask = causal_mask(4)  # Lower-triangular mask
+output, weights = scaled_dot_product_attention(Q, K, V, mask=mask)
+```
+
+### Multi-Head Attention
+
+```python
+from token_emb.attention_numpy import multi_head_attention
+
+x = np.random.randn(2, 8, 64)  # batch=2, seq_len=8, d_model=64
+output, attn_weights = multi_head_attention(x, num_heads=4, d_model=64)
+print(output.shape)       # (2, 8, 64)
+print(attn_weights.shape) # (2, 4, 8, 8)
+```
+
+### Key Functions
+
+| Function | Description |
+|----------|-------------|
+| `softmax(x, axis)` | Numerically stable softmax |
+| `scaled_dot_product_attention(Q, K, V, mask, dropout_rate)` | Core SDPA implementation |
+| `multi_head_attention(x, num_heads, d_model, mask)` | Full MHA with projection matrices |
+| `causal_mask(seq_len)` | Generate autoregressive mask |
+| `attention_pattern_visualization(weights, tokens)` | Text-based attention heatmap |
+
+### How It Works
+
+The core formula: **Attention(Q, K, V) = softmax(QK^T / sqrt(d_k)) · V**
+
+- **Q (Query)**: What information each token is looking for
+- **K (Key)**: What information each token offers
+- **V (Value)**: The actual content to retrieve
+- **Scale factor (1/sqrt(d_k))**: Prevents softmax saturation with large dot products
+- **Causal mask**: Ensures tokens can only attend to previous positions (used in GPT-style models)
+
+---
+
 ## API Reference
 
 See docstrings in source files for detailed API documentation:
@@ -308,3 +366,4 @@ See docstrings in source files for detailed API documentation:
 - `src/token_emb/tokenizer_utils.py`
 - `src/token_emb/embedding_utils.py`
 - `src/token_emb/pca_visualizer.py`
+- `src/token_emb/attention_numpy.py`
