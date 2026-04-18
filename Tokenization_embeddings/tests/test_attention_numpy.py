@@ -13,6 +13,7 @@ from token_emb.attention_numpy import (
 )
 
 
+
 def test_softmax():
     x = np.array([[1.0, 2.0, 3.0]])
     result = softmax(x)
