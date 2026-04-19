@@ -12,7 +12,7 @@ def test_encode_decode_roundtrip():
         "The quick brown fox jumps over the lazy dog.",
         "Machine learning is transforming AI.",
         "こんにちは世界",  # Japanese
-        "Hello 世界! 🌍",  # Mixed
+        "Hello 世界! 🌍",  
     ]
 
     for text in texts:
