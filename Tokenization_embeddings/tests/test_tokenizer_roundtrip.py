@@ -5,7 +5,7 @@ sys.path.insert(0, str(Path(__file__).parent.parent / "src"))
 
 from token_emb.tokenizer_utils import TokenizerWrapper
 
-
+   
 def test_encode_decode_roundtrip():
     texts = [
         "Hello world",
