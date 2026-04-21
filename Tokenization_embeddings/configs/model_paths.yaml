@@ -1,25 +1,21 @@
 # Model Configuration
 
-# HuggingFace Models
 huggingface:
   default: "sentence-transformers/all-MiniLM-L6-v2"
   
-  # Lightweight models (fast, low memory)
+
   lightweight:
     - "sentence-transformers/all-MiniLM-L6-v2"  # 384-dim, fastest
     - "sentence-transformers/paraphrase-MiniLM-L3-v2"  # 384-dim, even smaller
   
-  # High quality models (better embeddings, slower)
   high_quality:
     - "sentence-transformers/all-mpnet-base-v2"  # 768-dim, best quality
     - "sentence-transformers/all-roberta-large-v1"  # 1024-dim, highest quality
   
-  # Multilingual models
   multilingual:
     - "sentence-transformers/paraphrase-multilingual-MiniLM-L12-v2"
     - "sentence-transformers/paraphrase-multilingual-mpnet-base-v2"
-
-# OpenAI Models
+    
 openai:
   default: "text-embedding-ada-002"
   
@@ -28,47 +24,33 @@ openai:
     - "text-embedding-3-small"  # 1536-dim, cheap, good quality
     - "text-embedding-3-large"  # 3072-dim, best quality, expensive
 
-# Tokenizer Models
 tokenizers:
-  # OpenAI models (use tiktoken)
   openai:
     - "gpt-4"
     - "gpt-3.5-turbo"
     - "text-embedding-ada-002"
     - "text-davinci-003"
-  
-  # HuggingFace models
+
   huggingface:
     - "bert-base-uncased"
     - "gpt2"
     - "meta-llama/Llama-2-7b-hf"
 
-# Cache Configuration
 cache:
-  # Directory to cache downloaded models
   dir: "~/.cache/token_emb"
   
-  # Whether to use offline mode (use cached models only)
   offline: false
 
-# PCA Configuration
 pca:
-  # Default number of components
   default_components: 2
   
-  # Maximum number of components
   max_components: 50
   
-  # Random state for reproducibility
   random_state: 42
 
-# Embedding Configuration
 embedding:
-  # Default batch size for encoding
   batch_size: 32
   
-  # Show progress bar during encoding
   show_progress: true
   
-  # Normalize embeddings (L2 norm)
   normalize: false
