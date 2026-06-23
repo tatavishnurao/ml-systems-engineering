@@ -84,3 +84,33 @@ Expected default result:
 - Total compute: 8,640,266,240 ops
 - Arithmetic intensity: 62.42 ops/byte
 - Verdict: memory-bound
+
+## Multi-Head Attention
+
+Multi-head attention runs several attention heads in parallel.
+
+Instead of doing one attention operation over the full model dimension, the model splits the hidden dimension into smaller heads.
+
+Example:
+
+- d_model = 512
+- num_heads = 8
+- head_dim = 64
+
+Each head learns a different attention pattern. After attention is computed in each head, the heads are concatenated and passed through a final output projection.
+
+The basic flow is:
+
+1. X is projected into Q, K, and V
+2. Q, K, and V are split into heads
+3. Each head runs scaled dot-product attention
+4. Head outputs are concatenated
+5. A final output projection mixes the heads
+
+Run the demo:
+
+python Attention/multi_head_attention.py
+
+Try different dimensions:
+
+python Attention/multi_head_attention.py --seq-len 8 --d-model 16 --num-heads 4
