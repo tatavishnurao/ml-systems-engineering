@@ -247,11 +247,3 @@ where:
 n = sequence length
 d = head dimension
 ```
-
-## Summary
-
-Standard attention compares every token with every other token.
-
-Linear attention first compresses keys and values, then lets each query read from that compressed summary.
-
-This makes it more efficient for long-context sequence processing.
