@@ -114,3 +114,144 @@ python Attention/multi_head_attention.py
 Try different dimensions:
 
 python Attention/multi_head_attention.py --seq-len 8 --d-model 16 --num-heads 4
+
+# Linear Attention
+
+This folder contains a minimal PyTorch implementation of **linear attention**.
+
+## Why Linear Attention?
+
+Standard attention computes:
+
+```text
+Attention(Q, K, V) = softmax(QK^T)V
+```
+
+This creates a full `seq_len × seq_len` attention matrix.
+
+That means every token compares with every other token.
+
+For long sequences, this becomes expensive because the cost grows quadratically:
+
+```text
+standard attention: O(n²d)
+```
+
+## Core Idea
+
+Linear attention avoids building the full attention matrix.
+
+Instead of computing:
+
+```text
+softmax(QK^T)V
+```
+
+we use a positive feature map `φ` and rewrite attention as:
+
+```text
+φ(Q)(φ(K)^T V)
+```
+
+The important trick is this:
+
+```text
+φ(K)^T V
+```
+
+is computed first.
+
+So instead of comparing every query token with every key token directly, the keys and values are compressed into a smaller summary first. Then each query reads from that summary.
+
+## Feature Map
+
+In this implementation, the feature map is:
+
+```python
+φ(x) = elu(x) + 1
+```
+
+This keeps the transformed `Q` and `K` values positive, which is useful for linear attention.
+
+## Example
+
+The script uses this example input:
+
+```python
+batch_size = 2
+seq_len = 8
+embed_dim = 16
+num_heads = 4
+```
+
+So the input tensor shape is:
+
+```text
+[2, 8, 16]
+```
+
+The output shape is also:
+
+```text
+[2, 8, 16]
+```
+
+Linear attention changes the token representations, but preserves the original input shape.
+
+## Run
+
+From the repo root:
+
+```bash
+uv run python attention/linear_attention.py
+```
+
+Expected output:
+
+```text
+Linear Attention Example
+------------------------
+Input shape:  torch.Size([2, 8, 16])
+Output shape: torch.Size([2, 8, 16])
+```
+
+## Standard Attention vs Linear Attention
+
+Standard attention:
+
+```text
+QK^T creates a [seq_len, seq_len] matrix
+```
+
+Linear attention:
+
+```text
+K^T V creates a smaller compressed summary
+```
+
+So the rough complexity changes from:
+
+```text
+O(n²d)
+```
+
+to:
+
+```text
+O(nd²)
+```
+
+where:
+
+```text
+n = sequence length
+d = head dimension
+```
+
+## Summary
+
+Standard attention compares every token with every other token.
+
+Linear attention first compresses keys and values, then lets each query read from that compressed summary.
+
+This makes it more efficient for long-context sequence processing.
