@@ -3,7 +3,10 @@ import torch
 import torch.nn.functional as F
 
 
-
+def standard_attention(q, k, v):
+    scores = q @ k.transpose(-2, -1)
+    weights = F.softmax(scores, dim=-1)
+    return weights @ v
 
 
 def linear_attention(q, k, v):
