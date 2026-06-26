@@ -51,3 +51,4 @@ if __name__ == "__main__":
 
     print("Cross Attention Example")
     print("-----------------------")
+    print("Query shape:  ", query_tokens.shape)
