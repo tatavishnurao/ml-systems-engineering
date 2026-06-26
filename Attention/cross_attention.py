@@ -50,6 +50,7 @@ if __name__ == "__main__":
     output = model(query_tokens, context_tokens)
 
     print("Cross Attention Example")
-    print("-----------------------")
     print("Query shape:  ", query_tokens.shape)
     print("Context shape:", context_tokens.shape)
+    print("Output shape: ", output.shape)
+    
