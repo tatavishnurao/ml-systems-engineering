@@ -34,3 +34,19 @@ class CrossAttention(nn.Module):
         out = attn_weights @ v
         return self.out_proj(out)
 
+if __name__ == "__main__":
+    torch.manual_seed(42)
+
+    batch_size = 2
+    query_len = 4
+    context_len = 6
+    embed_dim = 16
+
+    query_tokens = torch.randn(batch_size, query_len, embed_dim)
+    context_tokens = torch.randn(batch_size, context_len, embed_dim)
+
+    model = CrossAttention(embed_dim=embed_dim)
+
+    output = model(query_tokens, context_tokens)
+
+    print("Cross Attention Example")
