@@ -1,5 +1,5 @@
 import numpy as np
-from sdpa_numpy import scaled_dot_product_attention, softmax
+from sdpa_numpy import scaled_dot_product_attention
 
 
 class MultiHeadAttention:

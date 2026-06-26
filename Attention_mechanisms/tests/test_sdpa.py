@@ -1,7 +1,12 @@
+import sys
+from pathlib import Path
+
+sys.path.insert(0, str(Path(__file__).parent.parent / "python"))
+
 import numpy as np
 from sdpa_numpy import softmax, scaled_dot_product_attention
 from multi_head import MultiHeadAttention
-from causal_mask import create_causal_mask, apply_causal_mask
+from causal_mask import create_causal_mask
 
 
 def test_softmax():
