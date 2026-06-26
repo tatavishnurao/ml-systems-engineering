@@ -16,10 +16,8 @@ class CrossAttention(nn.Module):
         """
         query_tokens:   [batch, query_len, embed_dim]
         context_tokens: [batch, context_len, embed_dim]
-
         output:         [batch, query_len, embed_dim]
         """
-
         q = self.q_proj(query_tokens)
         k = self.k_proj(context_tokens)
         v = self.v_proj(context_tokens)
