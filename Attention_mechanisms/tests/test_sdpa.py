@@ -46,7 +46,7 @@ def test_causal_mask():
     seq_len = 4
     mask = create_causal_mask(seq_len)
     assert mask.shape == (seq_len, seq_len)
-    assert mask[0, 0] == 0
+    assert mask[0, 0] == 1
     assert mask[1, 0] == 1
     print("test_causal_mask: PASSED")
 

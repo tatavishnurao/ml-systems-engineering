@@ -28,15 +28,15 @@ class MultiHeadAttention:
     ) -> np.ndarray:
         batch_size = query.shape[0]
 
-        Q = self.split_heads(self.W_q @ query)
-        K = self.split_heads(self.W_k @ key)
-        V = self.split_heads(self.W_v @ value)
+        Q = self.split_heads(query @ self.W_q.T)
+        K = self.split_heads(key @ self.W_k.T)
+        V = self.split_heads(value @ self.W_v.T)
 
         attn_output, _ = scaled_dot_product_attention(Q, K, V, mask)
         attn_output = attn_output.transpose(0, 2, 1, 3)
         attn_output = attn_output.reshape(batch_size, -1, self.d_model)
 
-        return self.W_o @ attn_output
+        return attn_output @ self.W_o.T
 
 
 if __name__ == "__main__":
