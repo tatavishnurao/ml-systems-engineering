@@ -18,7 +18,7 @@ def scaled_dot_product_attention(
     if scale is None:
         scale = np.sqrt(d_k)
 
-    scores = np.matmul(query, key.transpose(0, 1)) / scale
+    scores = np.matmul(query, key.swapaxes(-1, -2)) / scale
 
     if mask is not None:
         scores = np.where(mask == 0, -1e9, scores)
