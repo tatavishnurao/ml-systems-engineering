@@ -19,10 +19,8 @@ class SlidingWindowAttention(nn.Module):
             """
             x:      [batch, seq_len, embed_dim]
             output: [batch, seq_len, embed_dim]
-    
             Each token only attends to nearby tokens inside a fixed window.
             """
-    
             batch_size, seq_len, embed_dim = x.shape
     
             q = self.q_proj(x)
@@ -53,7 +51,6 @@ if __name__ == "__main__":
     seq_len = 8
     embed_dim = 16
     window_size = 2
-
     x = torch.randn(batch_size, seq_len, embed_dim)
 
     model = SlidingWindowAttention(
@@ -61,7 +58,6 @@ if __name__ == "__main__":
             window_size=window_size,
         )
     output = model(x)
-    
     print("Sliding Window Attention Example")
     print("--------------------------------")
     print("Input shape: ", x.shape)
