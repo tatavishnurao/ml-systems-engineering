@@ -45,4 +45,13 @@ class SlidingWindowAttention(nn.Module):
     
             out = attn_weights @ v
             return self.out_proj(out)
-        
+
+if __name__ == "__main__":
+    torch.manual_seed(42)
+
+    batch_size = 2
+    seq_len = 8
+    embed_dim = 16
+    window_size = 2
+
+    x = torch.randn(batch_size, seq_len, embed_dim)
