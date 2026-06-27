@@ -62,6 +62,6 @@ if __name__ == "__main__":
         )
     output = model(x)
     
-        print("Sliding Window Attention Example")
-        print("--------------------------------")
-        print("Input shape: ", x.shape)
+    print("Sliding Window Attention Example")
+    print("--------------------------------")
+    print("Input shape: ", x.shape)
