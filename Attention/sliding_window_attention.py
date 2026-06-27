@@ -65,3 +65,5 @@ if __name__ == "__main__":
     print("Sliding Window Attention Example")
     print("--------------------------------")
     print("Input shape: ", x.shape)
+    print("Output shape:", output.shape)
+        print("Window size: ", window_size)
