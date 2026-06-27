@@ -14,3 +14,35 @@ class SlidingWindowAttention(nn.Module):
         self.k_proj = nn.Linear(embed_dim, embed_dim, bias=False)
         self.v_proj = nn.Linear(embed_dim, embed_dim, bias=False)
         self.out_proj = nn.Linear(embed_dim, embed_dim)
+
+    def forward(self, x: torch.Tensor) -> torch.Tensor:
+            """
+            x:      [batch, seq_len, embed_dim]
+            output: [batch, seq_len, embed_dim]
+    
+            Each token only attends to nearby tokens inside a fixed window.
+            """
+    
+            batch_size, seq_len, embed_dim = x.shape
+    
+            q = self.q_proj(x)
+            k = self.k_proj(x)
+            v = self.v_proj(x)
+    
+            scores = q @ k.transpose(-2, -1)
+            scores = scores / math.sqrt(embed_dim)
+    
+            positions = torch.arange(seq_len, device=x.device)
+    
+            distance = positions[None, :] - positions[:, None]
+            distance = distance.abs()
+    
+            window_mask = distance > self.window_size
+    
+            scores = scores.masked_fill(window_mask, float("-inf"))
+    
+            attn_weights = F.softmax(scores, dim=-1)
+    
+            out = attn_weights @ v
+            return self.out_proj(out)
+        
