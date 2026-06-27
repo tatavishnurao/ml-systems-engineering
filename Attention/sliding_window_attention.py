@@ -55,3 +55,8 @@ if __name__ == "__main__":
     window_size = 2
 
     x = torch.randn(batch_size, seq_len, embed_dim)
+
+    model = SlidingWindowAttention(
+            embed_dim=embed_dim,
+            window_size=window_size,
+        )
