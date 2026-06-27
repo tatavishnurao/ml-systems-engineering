@@ -60,3 +60,8 @@ if __name__ == "__main__":
             embed_dim=embed_dim,
             window_size=window_size,
         )
+    output = model(x)
+    
+        print("Sliding Window Attention Example")
+        print("--------------------------------")
+        print("Input shape: ", x.shape)
